@@ -1,21 +1,56 @@
-import React, { Component } from 'react';
+import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
+
+import * as authActions from './state/actions/authActions';
+
+import Header from './views/components/Header';
+
 import logo from './logo.svg';
 import './App.css';
+import GoogleSignin from './views/containers/GoogleSignin/index';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
-}
+const App = props => {
+  let content = !!props.isAuthenticated ? (
+    <Fragment>
+      <p>Authenticated</p>
+      <Fragment>{props.user.email}</Fragment>
+      <Fragment>
+        <img src={props.user.picture} />
+        <button onClick={props.logout} className="button">
+          Log out
+        </button>
+      </Fragment>
+    </Fragment>
+  ) : (
+    <Fragment>
+      <GoogleSignin />
+    </Fragment>
+  );
+  return (
+    <div className="App">
+      <Header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <h1 className="App-title">Welcome to React</h1>
+      </Header>
+      <Fragment>{content}</Fragment>
+    </div>
+  );
+};
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user,
+    token: state.auth.token
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    logout: () => {
+      dispatch(authActions.logout(dispatch));
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
