@@ -10,12 +10,13 @@ export const logout = dispatch => dispatch => {
 };
 
 export const googleResponse = (res, dispatch) => dispatch => {
+  console.log(res);
   const config = {
     method: 'POST',
     data: { id_token: res.tokenId },
     config: { headers: { 'Content-Type': 'application/json' } }
   };
-  API.customCall('auth/google', config)
+  API.request('auth/google', config)
     .then(res => {
       dispatch({
         type: types.USER_DATA_SUCCESS,
@@ -30,6 +31,29 @@ export const googleResponse = (res, dispatch) => dispatch => {
     });
 };
 
+export const facebookResponse = (res, dispatch) => dispath => {
+  const config = {
+    method: 'POST',
+    data: { access_token: res.accessToken },
+    config: { headers: { 'Content-Type': 'application/json' } }
+  };
+  API.request('auth/facebook', config)
+    .then(res => {
+      console.log(res);
+      dispatch({
+        type: types.USER_DATA_SUCCESS,
+        data: res.data
+      });
+    })
+    .catch(error => {
+      console.log(error);
+      dispatch({
+        type: types.USER_DATA_ERROR,
+        error
+      });
+    });
+};
+
 export const loginFailed = (error, dispatch) =>
   dispatch({
     type: types.USER_DATA_ERROR,
@@ -39,6 +63,7 @@ export const loginFailed = (error, dispatch) =>
 export const checkCookie = dispatch => {
   const token = Cookies.get('token');
   if (token) {
+    console.log(token);
     const config = {
       method: 'POST',
       data: { token },
@@ -46,7 +71,7 @@ export const checkCookie = dispatch => {
         headers: { 'Content-Type': 'application/json', 'x-auth-token': token }
       }
     };
-    API.customCall('auth/token', config)
+    API.request('auth/token', config)
       .then(res => {
         dispatch({
           type: types.USER_DATA_SUCCESS,

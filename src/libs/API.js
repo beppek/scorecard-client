@@ -14,7 +14,7 @@ export const post = (url, data) => {
   });
 };
 
-export const customCall = (url, config) => {
+export const request = (url, config) => {
   return new Promise((resolve, reject) => {
     config.url = `${API_URL}/${url}`;
     axios(config)

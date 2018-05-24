@@ -11,6 +11,7 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case types.USER_DATA_SUCCESS:
       if (action.data.token) {
+        console.log(action.data.token);
         Cookies.set('token', action.data.token);
       }
       return {
@@ -29,6 +30,14 @@ export default function reducer(state = initialState, action) {
         token: null
       };
 
+    case types.USER_DATA_ERROR:
+      console.log(action.error);
+      return {
+        ...state,
+        user: null,
+        isAuthenticated: false,
+        token: null
+      };
     default:
       return state;
   }

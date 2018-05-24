@@ -1,22 +1,24 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { connect } from 'react-redux';
 
 import * as authActions from '../../../state/actions/authActions';
 import { clientId } from '../../../secrets/google.secrets';
+import styled from 'styled-components';
 
-const GoogleSignin = props => {
+const Button = props => {
   return (
-    <Fragment>
-      <GoogleLogin
-        clientId={clientId}
-        buttonText="Login"
-        onSuccess={props.googleResponse}
-        onFailure={props.loginFailed}
-      />
-    </Fragment>
+    <GoogleLogin
+      clientId={clientId}
+      onSuccess={props.googleResponse}
+      onFailure={props.loginFailed}
+    />
   );
 };
+
+const GoogleLoginButton = styled(Button)`
+  cursor: pointer;
+`;
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -29,4 +31,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(GoogleSignin);
+export default connect(null, mapDispatchToProps)(GoogleLoginButton);
+
+// export default GoogleLoginButton;
